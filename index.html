@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./img/50px-GNOME_Todo_icon_2019.svg.png">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./script.js" defer type="module"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <title>ToDo List</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="title">ToDo List</h1>
+        </div>
+    </header>
+    <main class="main">
+        <div class="container">
+            <form action="" class="form__authorization">
+                <input type="text" class="list__input" placeholder="Сделать удаление завершенных и всех">
+                <button class="list__submit">Добавить</button>
+            </form>
+            <ul class="list__actions display__none">
+                
+            </ul>
+            <div class="delete__panel display__none">
+                <button class="delete__completed">Удалить завершенные</button>
+                <button class="delete__all">Удалить все</button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
