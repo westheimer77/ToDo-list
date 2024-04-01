@@ -168,6 +168,38 @@ ul{
     display: none;
 }
 
+.pencil{
+    width: 16px;
+    height: 21px;
+}
+
+.editing{
+    display: flex;
+    gap: 16px;
+}
+
+.inputPencil{
+    width: 450px;
+    height: 38px;
+    border-radius: 4px;
+    border: 1px solid var(--Stroke-Input, #CED4DA);
+    background: var(---Gray-White, #FFF);
+    padding: 9px 14px 9px 14px;
+    color: var(--Secondary-Dark-Color, #54595E);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 21px;
+}
+
+.inputPencil:focus{
+    outline: none;
+}
+
+.checkMark{
+    width: 16px;
+    height: 21px;
+}
 
 @media screen and (max-width: 650px) {
     .title{

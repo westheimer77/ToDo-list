@@ -7,6 +7,7 @@ const cross = document.querySelectorAll('.cross')
 const checkbox = document.querySelector('.checkbox')
 const deleteComleted = document.querySelector('.delete__completed')
 const panel = document.querySelector('.delete__panel')
+const pencil = document.querySelector('.pencil')
 let arrLS = JSON.parse(window.localStorage.getItem('Todo')) ?? []
 
 
@@ -21,7 +22,10 @@ function render(arr){
         li.innerHTML = `
             <input type="checkbox" class="checkbox" ${(el.condition == true) ? 'checked' : ''} id="${el.id}">
             <p class="task">${el.task}</p>
-            <input type="image" src="./img/❌.png" class="cross">
+            <div class="editing">
+            <input type="image" src="./img/✏️.png" class="pencil">
+            <input type="image" src="./img/🗑.png" class="cross">
+            </div>
         `
         ul.append(li)
         
@@ -37,6 +41,7 @@ form.addEventListener('submit', ((evt) => {
     const obj = {'task': value, 'condition' : false, 'id' : id}
     arrLS.push(obj)
     window.localStorage.setItem('Todo', JSON.stringify(arrLS))
+    input.value = ''
     render(arrLS)
 }))
 
@@ -61,7 +66,7 @@ deleteAll.addEventListener('click', deleteAllHandler)
 
 ul.addEventListener('click', (evt =>{
     if (evt.target.className == 'cross'){
-        const target = evt.target.parentNode.querySelector('.task').innerHTML
+        const target = evt.target.parentNode.parentNode.querySelector('.task').innerHTML
         arrLS.forEach(el =>{
             if (target == el.task){
                 const index = arrLS.indexOf(el)
@@ -70,6 +75,38 @@ ul.addEventListener('click', (evt =>{
                 render(arrLS)
             }
         })
+    }
+}))
+
+
+ul.addEventListener('click', (evt => {
+    if (evt.target.className == 'pencil'){
+        const target = evt.target.parentNode.parentNode.querySelector('.task').innerHTML
+        let p = evt.target.parentNode.parentNode.querySelector('.task')
+        const inputPencil = document.createElement('input')
+        inputPencil.className = 'inputPencil'
+        p.replaceWith(inputPencil)
+        inputPencil.value = target
+        const checkMark = document.createElement('input')
+        checkMark.type = 'image'
+        checkMark.src = './img/✅.png'
+        checkMark.className = 'checkMark'
+        let pen = evt.target.parentNode.querySelector('.pencil')
+        pen.replaceWith(checkMark)
+        checkMark.addEventListener('click', (evt =>{
+            if (evt.target.className == 'checkMark'){
+                // console.log(evt.target.parentNode.parentNode.querySelector('.checkbox').id);
+                const targetId = evt.target.parentNode.parentNode.querySelector('.checkbox').id
+                arrLS.forEach(el => {
+                    if(targetId == el.id){
+                        el.task = inputPencil.value
+                        window.localStorage.setItem('Todo', JSON.stringify(arrLS))
+                    }
+                })
+            }
+            render(arrLS)
+        }))
+
     }
 }))
 
