@@ -13,36 +13,46 @@ let arrLS = JSON.parse(window.localStorage.getItem('Todo')) ?? []
 
 
 
-
+// Отрисовка списка
 function render(arr){
     ul.innerHTML =''
-    arr.forEach(el => {
-        const li = document.createElement('li')
-        li.className = 'task__description'
-        li.innerHTML = `
-            <input type="checkbox" class="checkbox" ${(el.condition == true) ? 'checked' : ''} id="${el.id}">
-            <p class="task">${el.task}</p>
-            <div class="editing">
-            <input type="image" src="./img/✏️.png" class="pencil">
-            <input type="image" src="./img/🗑.png" class="cross">
-            </div>
-        `
-        ul.append(li)
-        
-    });
-}
+    if ( arr.length > 0) {
+        arr.forEach(el => {
+            const li = document.createElement('li')
+            li.className = 'task__description'
+            li.innerHTML = `
+                <input type="checkbox" class="checkbox" ${(el.condition == true) ? 'checked' : ''} id="${el.id}">
+                <p class="task">${el.task}</p>
+                <div class="editing">
+                <input type="image" src="./img/✏️.png" class="pencil">
+                <input type="image" src="./img/🗑.png" class="cross">
+                </div>
+            `
+            ul.append(li)
+            form.classList.add('form__authorizationActive')
+            panel.classList.remove('display__none')
+            ul.classList.remove('display__none')
+        });
+    } else {
+        panel.classList.add(`display__none`)
+        ul.classList.add('display__none')
+        form.classList.remove('form__authorizationActive')   
+    }
+    }
 
 
-
+// Инпут
 form.addEventListener('submit', ((evt) => {
     evt.preventDefault()
     const value = input.value
-    const id = Date.now()
-    const obj = {'task': value, 'condition' : false, 'id' : id}
-    arrLS.push(obj)
-    window.localStorage.setItem('Todo', JSON.stringify(arrLS))
-    input.value = ''
-    render(arrLS)
+    if (value.trim() != '') {
+        const id = Date.now()
+        const obj = {'task': value, 'condition' : false, 'id' : id}
+        arrLS.push(obj)
+        window.localStorage.setItem('Todo', JSON.stringify(arrLS))
+        input.value = ''
+        render(arrLS)
+    }
 }))
 
 render(arrLS)
@@ -51,6 +61,7 @@ function deleteAllHandler(){
     window.localStorage.clear()
     arrLS = []
     ul.innerHTML =''
+    render(arrLS)
 }
 
 
@@ -63,7 +74,7 @@ function deleteComletedHandler(){
 
 deleteAll.addEventListener('click', deleteAllHandler)
 
-
+// Корзина
 ul.addEventListener('click', (evt =>{
     if (evt.target.className == 'cross'){
         const target = evt.target.parentNode.parentNode.querySelector('.task').innerHTML
@@ -78,7 +89,7 @@ ul.addEventListener('click', (evt =>{
     }
 }))
 
-
+// Изменение записей
 ul.addEventListener('click', (evt => {
     if (evt.target.className == 'pencil'){
         const target = evt.target.parentNode.parentNode.querySelector('.task').innerHTML
@@ -95,14 +106,15 @@ ul.addEventListener('click', (evt => {
         pen.replaceWith(checkMark)
         checkMark.addEventListener('click', (evt =>{
             if (evt.target.className == 'checkMark'){
-                // console.log(evt.target.parentNode.parentNode.querySelector('.checkbox').id);
                 const targetId = evt.target.parentNode.parentNode.querySelector('.checkbox').id
-                arrLS.forEach(el => {
-                    if(targetId == el.id){
-                        el.task = inputPencil.value
-                        window.localStorage.setItem('Todo', JSON.stringify(arrLS))
-                    }
-                })
+                if (inputPencil.value.trim() != ''){
+                    arrLS.forEach(el => {
+                        if(targetId == el.id){
+                            el.task = inputPencil.value
+                            window.localStorage.setItem('Todo', JSON.stringify(arrLS))
+                        }
+                    })
+                }
             }
             render(arrLS)
         }))
@@ -110,6 +122,8 @@ ul.addEventListener('click', (evt => {
     }
 }))
 
+
+// Обработка чекбоксов
 ul.addEventListener('click', (evt => {
     if (evt.target.className == 'checkbox'){
         const target = evt.target.parentNode.querySelector('.task').innerHTML;
@@ -119,11 +133,9 @@ ul.addEventListener('click', (evt => {
                 if (document.getElementById(getCheckbox).checked === true){
                     el.condition = true
                     window.localStorage.setItem('Todo', JSON.stringify(arrLS))
-                    
                 } else {
                     el.condition = false
                     window.localStorage.setItem('Todo', JSON.stringify(arrLS))
-                    
                 }
             }
         })
@@ -135,18 +147,17 @@ deleteComleted.addEventListener('click', deleteComletedHandler)
 
 
 
-
-
-input.addEventListener(`input`, ()=>{
-    panel.classList.remove('display__none')
-    ul.classList.remove('display__none')
-    form.classList.add('form__authorizationActive')
-})
-document.addEventListener(`click`, () =>{
-    panel.classList.add(`display__none`)
-    ul.classList.add('display__none')
-    form.classList.remove('form__authorizationActive')
-})
-document.querySelector(`.main`).addEventListener(`click`, (event)=>{
-    event.stopPropagation();
-})
+// Список появляется при нажатии и исчезает при нажатии на любое место по документу
+// input.addEventListener(`input`, ()=>{
+//     panel.classList.remove('display__none')
+//     ul.classList.remove('display__none')
+//     form.classList.add('form__authorizationActive')
+// })
+// document.addEventListener(`click`, () =>{
+//     panel.classList.add(`display__none`)
+//     ul.classList.add('display__none')
+//     form.classList.remove('form__authorizationActive')
+// })
+// document.querySelector(`.main`).addEventListener(`click`, (event)=>{
+//     event.stopPropagation();
+// })
